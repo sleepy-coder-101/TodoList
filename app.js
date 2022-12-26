@@ -10,11 +10,9 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-
 mongoose.set("strictQuery", false);
 
 // const url = "mongodb://127.0.0.1:27017/todolistDB";
-
 const url = "mongodb+srv://Monirul:Monirul@cluster0.bldwvwk.mongodb.net/todolistDB"
 mongoose.connect(url);
 
@@ -53,7 +51,6 @@ app.get("/", function (req, res) {
       if (items.length === 0) {
         Item.insertMany(defaultItems, (err) => {
           if (err) console.log(err);
-          // else console.log("Sucessfully entered items into the defaultItems");
         });
         res.redirect("/");
       } else {
@@ -85,8 +82,6 @@ app.get("/:customListName", function (req, res) {
       console.log(err);
     }
   });
-
-  // res.render("list", { listTitle: customListName, newListItems: defaultItems });
 });
 
 app.post("/", function (req, res) {
@@ -101,7 +96,6 @@ app.post("/", function (req, res) {
   } else {
     List.findOne({ name: listName }, function (err, foundList) {
       if (!err) {
-        // if(foundList) do something here
         foundList.items.push(item);
         foundList.save();
         res.redirect("/" + listName);
@@ -119,7 +113,6 @@ app.post("/delete", function (req, res) {
   if (listName === "Today") {
     Item.findByIdAndRemove(checkedItemId, function (err) {
       if (!err) {
-        // console.log("Sucessfully deleted the item");
         res.redirect("/");
       } else {
         console.log(err);
@@ -131,7 +124,6 @@ app.post("/delete", function (req, res) {
       { $pull: { items: { _id: checkedItemId } } },
       function (err, foundList) {
         if (!err) {
-          // console.log("Sucessfully deleted the item");
           res.redirect("/" + listName);
         } else {
           console.log(err);
@@ -141,10 +133,6 @@ app.post("/delete", function (req, res) {
   }
 });
 
-// app.get("/work", function (req, res) {
-//   res.render("list", { listTitle: "Work List", newListItems: workItems });
-// });
-
 app.get("/about", function (req, res) {
   res.render("about");
 });
@@ -152,5 +140,5 @@ app.get("/about", function (req, res) {
 const port = process.env.PORT || 3000;
 
 app.listen(port, function () {
-  console.log("Server started on port 3000");
+  console.log("Server is running");
 });
